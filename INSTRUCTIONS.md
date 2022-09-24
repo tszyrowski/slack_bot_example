@@ -24,3 +24,78 @@ The server responded with: {'ok': False, 'error': 'not_in_channel'}
 ```
 Connection can be done by goint to `Slack`, in channel message `/invite <chose bot's name>`
 
+# Event subscription
+
+Go to: `Slack API` -> `Event Subscriptions` turn on `Enable Events`
+It gives a `Request URL` option which is an endpoint of app running on a server
+
+## NGROK
+https://dashboard.ngrok.com/get-started/setup
+
+download, unzip file and `cd` to directory where it sits
+
+run with 
+`./ngrok http 5000`
+
+It should provide the output similar to:
+```
+ngrok                                                                                                         (Ctrl+C to quit)
+                                                                                                                              
+Visit http://localhost:4040/ to inspect, replay, and modify your requests                                                     
+                                                                                                                              
+Session Status                online                                                                                          
+Account                       [your name] (Plan: Free)                                                                             
+Version                       3.1.0                                                                                           
+Region                        Europe (eu)                                                                                     
+Latency                       24ms                                                                                            
+Web Interface                 http://127.0.0.1:4040                                                                           
+Forwarding                    https://[some url].eu.ngrok.io -> http://localhost:5000                                     
+                                                                                                                              
+Connections                   ttl     opn     rt1     rt5     p50     p90                                                     
+                              0       0       0.00    0.00    0.00    0.00 
+```
+
+## SlackEventApi
+
+The event is handled by `SlackEventAdapter([signing secret],"/slack/events", app)` 
+which takes the signing secret from `Slack API` -> `Basic Information` -> `Signing Secret`
+
+It should be added to `.env`
+
+## Linking together:
+
+Go to `slack api` -> `Event Subscriptions` -> `Request URL` 
+and post full endpoint (with `/slack/events`):
+
+https://[some url].eu.ngrok.io/slack/events
+
+Slack will `POST` to the endpoint to verify. The post can be seen locally in a browser:
+
+http://localhost:4040/inspect/http
+
+## Subscribe to event
+
+Go to `slack api` -> `Event Subscriptions` -> `Subscribe to bot events`
+
+add `channels.message`
+
+| Event Name       |	Description                    | Required Scope
+|------------------|-----------------------------------|------------------
+| message.channels | A message was posted to a channel | channels:history
+
+The above will automatically add scope
+
+To verify:
+
+Go to `slack api` -> `Event Subscriptions` -> `Scopes`
+
+Bot Token Scopes
+
+Scopes that govern what your app can access.
+
+OAuth Scope      | Description
+-----------------|------------ 
+channels:history | View messages and other content in public channels that First Bot has been added to
+chat:write       | Send messages as @first_bot
+
+**After all the app needs to be reinstalled**
