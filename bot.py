@@ -92,8 +92,12 @@ def message(payload):
         else:
             message_counts[user_id] = 1
         if text.lower() == "start":
+            # Send message to the channel
             send_welcome_message(channel_id, user_id)
-
+            # Send message directly to the user. Requires:
+            # `im:write` and `reactions:read`
+            send_welcome_message(f"@{user_id}", user_id)
+        # Send replicated message to the channel
         client.chat_postMessage(
             channel=channel_id,
             text=f"{text} send by {user_id}"

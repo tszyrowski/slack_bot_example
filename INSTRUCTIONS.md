@@ -131,3 +131,17 @@ client.chat_postMessage.__doc__
 ## use icons
 
 Enable `chat:write.customize` in Go to `slack api` -> `OAuth & Permissions` -> `Scopes`
+
+# Direct messages
+
+Update Scopes with `im:write` and `reactions:read`, Go to `slack api` -> `OAuth & Permissions` -> `Scopes`
+
+It should have set similar to below:
+OAuth Scope          | Description
+|--------------------|---------------
+channels:history     | View messages and other content in public channels that First Bot has been added to
+chat:write           | Send messages as @first_bot
+chat:write.customize | Send messages as @first_bot with a customized username and avatar
+commands             | Add shortcuts and/or slash commands that people can use
+im:write             | Start direct messages with people
+reactions:read       | View emoji reactions and their associated content in channels and conversations that First Bot has been added to
