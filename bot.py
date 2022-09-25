@@ -103,6 +103,24 @@ def message(payload):
             text=f"{text} send by {user_id}"
         )
 
+
+@slack_event_adapter.on("reaction_added")
+def reaction(payload):
+    print("--------------------- new reaction -------------------")
+    event = payload.get("event", {})
+    channel_id = event.get("item", {}).get("channel")
+    user_id = event.get("user")
+
+    if channel_id not in welcome_messages:
+        return
+
+    welcome = welcome_messages[channel_id][user_id]
+    welcome.completed = True
+    message = welcome.get_message()
+    updated_message = client.chat_update(**message)
+    welcome.timestamp = updated_message["ts"]
+
+
 @app.route("/message-count", methods=["POST"])
 def message_count():
     data = request.form

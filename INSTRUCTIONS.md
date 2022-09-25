@@ -145,3 +145,17 @@ chat:write.customize | Send messages as @first_bot with a customized username an
 commands             | Add shortcuts and/or slash commands that people can use
 im:write             | Start direct messages with people
 reactions:read       | View emoji reactions and their associated content in channels and conversations that First Bot has been added to
+
+# React to reactions
+
+Update Scopes with `reactions:read`, Go to `slack api` -> `OAuth & Permissions` -> `Scopes`
+
+Update event subscriptions:
+
+Go to `slack api` -> `Event Subscriptions` -> `New event authorization format` -> `Subscribe to bot events`
+
+It should look like:
+Event Name       |	Description                                    | Required Scope
+|----------------|-------------------------------------------------|----------
+message.channels | A message was posted to a channel               | channels:history 
+reaction_added   | A member has added an emoji reaction to an item | reactions:read
