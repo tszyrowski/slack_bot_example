@@ -1,3 +1,5 @@
 .env
 vSlackApp
 ngrok/*
+.vscode/*
+__pycache__

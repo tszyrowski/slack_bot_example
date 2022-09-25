@@ -113,3 +113,21 @@ Go to `slack api` -> `Slash Commands` -> [Create New Command]
 - fill up the rest
 
 **Reinstall the app**
+
+## chat_postMessage method
+
+```
+client.chat_postMessage.__doc__
+'Sends a message to a channel.
+        Args:
+            channel (str): The channel id. e.g. \'C1234567890\'
+            text (str): The message you\'d like to share. e.g. \'Hello world\'
+                text is not required when presenting blocks.
+            blocks (list): A dictionary list of blocks.
+                Blocks are required when not presenting text.
+                e.g. [{"type": "section", "text": {"type": "plain_text", "text": "Hello world"}}]
+```
+
+## use icons
+
+Enable `chat:write.customize` in Go to `slack api` -> `OAuth & Permissions` -> `Scopes`
