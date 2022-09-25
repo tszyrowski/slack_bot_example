@@ -26,6 +26,8 @@ Connection can be done by goint to `Slack`, in channel message `/invite <chose b
 
 # Event subscription
 
+Events are all what is going on in the channel
+
 Go to: `Slack API` -> `Event Subscriptions` turn on `Enable Events`
 It gives a `Request URL` option which is an endpoint of app running on a server
 
@@ -99,3 +101,15 @@ channels:history | View messages and other content in public channels that First
 chat:write       | Send messages as @first_bot
 
 **After all the app needs to be reinstalled**
+
+# Commands
+
+They are different than events. They start with `/` in a channel
+
+Go to `slack api` -> `Slash Commands` -> [Create New Command]
+
+- in `Command` type in for example `/message-count`
+- in `Request URL` create handle url for example: https://[some url].eu.ngrok.io/message-count
+- fill up the rest
+
+**Reinstall the app**
