@@ -1,3 +1,8 @@
+# Slack API
+
+Slack API can be found at:
+https://api.slack.com/apps/
+
 # Add bot to a channel
 
 The app needs to be connected to a particular channel. 
