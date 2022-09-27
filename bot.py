@@ -1,11 +1,15 @@
 import os
 from pathlib import Path
 import string
+from datetime import datetime, timedelta
+import pprint
 
 from dotenv import load_dotenv
 from flask import Flask, request, Response
 import slack
 from slackeventsapi import SlackEventAdapter
+
+printer = pprint.PrettyPrinter()
 
 env_path = Path(".") / ".env"
 load_dotenv(dotenv_path=env_path)
@@ -26,7 +30,25 @@ message_counts = {}
 welcome_messages = {}
 
 BAD_WORDS = ["hmm", "brum"]
+first_time = round((datetime.now() + timedelta(seconds=30)).timestamp())
+second_time = round((datetime.now() + timedelta(seconds=40)).timestamp())
+printer.pprint(type(first_time))
+printer.pprint(first_time)
+printer.pprint(type(second_time))
+printer.pprint(second_time)
 
+SCHEDULED_MESSAGES = [
+    {
+        "text": "First message",
+        "post_at": first_time,
+        "channel": "C043ULUET3N"
+    },
+    {
+        "text": "Second message",
+        "post_at": second_time,
+        "channel": "C043ULUET3N"
+    }
+]
 class WelcomeMEssage:
     START_TEXT = {
         "type": "section",
@@ -79,9 +101,32 @@ def send_welcome_message(channel, user):
     message = welcome.get_message()
     response = client.chat_postMessage(**message)
     welcome.timestamp = response["ts"]
-
-
     welcome_messages[channel][user] = welcome
+
+
+def schedule_messages(messages):
+    ids = []
+    for msg in messages:
+
+        response = client.chat_scheduleMessage(
+            channel=msg["channel"], text=msg["text"], post_at=msg["post_at"]
+        )
+        
+        printer.pprint(response)
+        id_ = response.get("scheduled_message_id")
+        ids.append(id_)
+    return ids
+
+
+def delete_scheduled_messages(channel, ids):
+    for _id in ids:
+        try:
+            client.chat_deleteScheduledMessage(
+                channel=channel, scheduled_message_id=_id
+            )
+            print(f" *** message {id} deleted")
+        except Exception as e:
+            print(f" ### message {id} errored with: {e}")
 
 
 def check_if_bad_words(message):
@@ -119,7 +164,7 @@ def message(payload):
         # Send replicated message to the channel
         client.chat_postMessage(
             channel=channel_id,
-            text=f"{text} send by {user_id}"
+            text=f"{text} send by {user_id} in {channel_id}"
         )
 
 
@@ -155,7 +200,9 @@ def message_count():
     return Response(), 200
 
 if __name__ == "__main__":
-    
+    ids = schedule_messages(SCHEDULED_MESSAGES)
+    print(f"Scheduled messages: {ids}")
+    delete_scheduled_messages("C043ULUET3N", ids)
     app.run(debug=True)
     client.chat_postMessage(channel="#test", text="Script worked")
 
